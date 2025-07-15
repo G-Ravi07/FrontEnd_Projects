@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <div class="main">
+        <div class="newcon hide">
+            <div class="win">Winner</div>
+            <button class="newbtn">New Game</button>
+        </div>
+        <h1>Tic Tac Toe Game</h1>
+        <div class="container">
+            <div class="game">
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+            </div>
+        </div>
+        <button class="resetbtn">Reset Game</button>
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll(".box");
+        const reset = document.querySelector(".resetbtn");
+        const win = document.querySelector(".win");
+        const newgame = document.querySelector(".newbtn");
+        const con = document.querySelector(".newcon");
+        let turn = true;
+
+        const winners = [
+            [0, 1, 2],
+            [0, 3, 6],
+            [0, 4, 8],
+            [1, 4, 7],
+            [2, 5, 8],
+            [2, 4, 6],
+            [3, 4, 5],
+            [6, 7, 8],
+        ];
+
+        const resetGame = () => {
+            turn = true;
+            enableBtns();
+            con.classList.add("hide");
+        };
+
+        const disableBtns = () => {
+            for (let box of boxes) {
+                box.disabled = true;
+            }
+        };
+
+        const enableBtns = () => {
+            for (let box of boxes) {
+                box.disabled = false;
+                box.innerText = '';
+                box.style.backgroundColor = "white";
+            }
+        };
+
+        const showWinner = (winner) => {
+            win.innerText = `Congratulations, winner is ${winner}`;
+            con.classList.remove("hide");
+            disableBtns();
+        };
+
+        const checkWinner = () => {
+            for (const pattern of winners) {
+                let p1 = boxes[pattern[0]].innerText;
+                let p2 = boxes[pattern[1]].innerText;
+                let p3 = boxes[pattern[2]].innerText;
+                if (p1 !== "" && p2 !== "" && p3 !== "") {
+                    if (p1 === p2 && p2 === p3) {
+                        boxes[pattern[0]].style.backgroundColor = "#90ee90";
+                        boxes[pattern[1]].style.backgroundColor = "#90ee90";
+                        boxes[pattern[2]].style.backgroundColor = "#90ee90";
+                        showWinner(p1);
+                        return;
+                    }
+                }
+            }
+
+            // Draw
+            let isDraw = true;
+            boxes.forEach((box) => {
+                if (box.innerText === "") {
+                    isDraw = false;
+                }
+            });
+
+            if (isDraw) {
+                win.innerText = `It's a Draw!`;
+                con.classList.remove("hide");
+                disableBtns();
+            }
+        };
+
+        boxes.forEach((box) => {
+            box.addEventListener("click", () => {
+                box.innerText = turn ? "O" : "X";
+                box.disabled = true;
+                turn = !turn;
+                checkWinner();
+            });
+        });
+
+        newgame.addEventListener("click", resetGame);
+        reset.addEventListener("click", resetGame);
+    </script>
+</body>
+</html>
